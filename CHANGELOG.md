@@ -1,7 +1,7 @@
 # Changelog
 
-All notable changes to `:package_name` will be documented in this file.
+All notable changes to `laravel-svelte-direct` will be documented in this file.
 
-## 1.0.0 - 202X-XX-XX
+## 0.0.1 - 2021-05-22
 
-- initial release
+- Initial proof-of-concept packages created
