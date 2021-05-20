@@ -1,4 +1,4 @@
-# Laravel Svelte Direct
+<p align="center"><img src="readme.jpg" width="75%"></p>
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/nickpoulos/laravel-svelte-direct.svg?style=flat-square)](https://packagist.org/packages/nickpoulos/laravel-svelte-direct)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/nickpoulos/laravel-svelte-direct/run-tests?label=tests)](https://github.com/nickpoulos/laravel-svelte-direct/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -78,10 +78,8 @@ Feel free to add your Svelte component anywhere inside the Blade HTML. You will 
 example.blade.php
 ```php
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content = "width = device-width, initial-scale = 1.0, maximum-scale = 1.0" />
     <title>My Example App</title>
     
     @sveltedirect
@@ -99,18 +97,15 @@ example.blade.php
     <!-- end components -->
     
 </div>
+
+<script type="text/javascript">
+    // tie your components together using vanilla js or something ike alpine
+</script>
 </body>
 </html>
 
 ```
 
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --provider="Nickpoulos\SvelteDirect\SvelteDirectServiceProvider" --tag="laravel-svelte-direct-migrations"
-php artisan migrate
-```
 
 You can publish the config file with:
 ```bash
@@ -144,7 +139,7 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
-
+    
 ## Security Vulnerabilities
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
