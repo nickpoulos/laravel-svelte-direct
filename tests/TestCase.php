@@ -2,8 +2,8 @@
 
 namespace Nickpoulos\SvelteDirect\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
 use Nickpoulos\SvelteDirect\SvelteDirectServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

@@ -25,7 +25,7 @@ class SvelteDirect
 
     public function loadBladePreCompiler() : void
     {
-        if (!$this->manifest) {
+        if (! $this->manifest) {
             return;
         }
 
@@ -34,7 +34,7 @@ class SvelteDirect
 
     public function loadBladeDirective() : void
     {
-        if (!$this->manifest) {
+        if (! $this->manifest) {
             return;
         }
 
@@ -48,6 +48,7 @@ class SvelteDirect
         $pattern = "/(?<=<)\s*{$tagPattern}/";
         preg_match_all($pattern, $view, $matches);
         $this->tagsBeingUsed = array_merge(array_unique($matches[0]), $this->tagsBeingUsed);
+
         return $view;
     }
 
@@ -55,7 +56,8 @@ class SvelteDirect
     public function generateDirectiveHtml(string $expression) : string
     {
         $tagsToLoad = array_intersect(array_keys($this->manifest), $this->tagsBeingUsed);
-        return array_reduce($tagsToLoad, function($previous, $current) {
+
+        return array_reduce($tagsToLoad, function ($previous, $current) {
             return $previous . '<script src="{{ mix("' . $this->manifest[$current] . '") }}"></script>' . PHP_EOL;
         }, '');
     }
