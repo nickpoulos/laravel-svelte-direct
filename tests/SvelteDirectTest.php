@@ -20,7 +20,7 @@ class SvelteDirectTest extends TestCase
     {
         $testManifest = ['test-tag' => '/js/TestTag.js'];
         $testManifestString = "<?php return ['test-tag' => '/js/TestTag.js']; ?>";
-        $testManifestPath ='./manifest.php';
+        $testManifestPath = './manifest.php';
 
         $files = new Filesystem();
 
