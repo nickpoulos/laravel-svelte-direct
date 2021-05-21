@@ -1,17 +1,17 @@
 {
-    "name": "vendor_slug/package_slug",
-    "description": ":package_description",
+    "name": "nickpoulos/laravel-svelte-direct",
+    "description": "Use Svelte components seamlessly in Laravel Blade Templates",
     "keywords": [
-        ":vendor_name",
+        "nickpoulos",
         "laravel",
-        "package_slug"
+        "laravel-svelte-direct"
     ],
-    "homepage": "https://github.com/vendor_slug/package_slug",
+    "homepage": "https://github.com/nickpoulos/laravel-svelte-direct",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Nick Poulos",
+            "email": "nick@nickpoulos.info",
             "role": "Developer"
         }
     ],
@@ -30,13 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Nickpoulos\\SvelteDirect\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Nickpoulos\\SvelteDirect\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -50,10 +49,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Nickpoulos\\SvelteDirect\\SvelteDirectServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\SkeletonFacade"
+                "SvelteDirect": "Nickpoulos\\SvelteDirect\\SvelteDirectFacade"
             }
         }
     },
