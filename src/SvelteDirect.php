@@ -2,6 +2,7 @@
 
 namespace Nickpoulos\SvelteDirect;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 
@@ -12,7 +13,7 @@ class SvelteDirect
 
     public function defaultManifestPath() : string
     {
-       return app()->bootstrapPath('cache/svelte-direct-components.php');
+       return App::bootstrapPath('cache/svelte-direct-components.php');
     }
 
     public function loadManifestFile(?string $manifestFilePath = null) : void
