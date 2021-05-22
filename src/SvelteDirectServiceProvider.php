@@ -2,8 +2,8 @@
 
 namespace Nickpoulos\SvelteDirect;
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
