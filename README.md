@@ -36,14 +36,14 @@ This project consists of two pieces.
 
 ### Install Laravel Svelte Direct JavaScript
 ```bash
-npm install laravel-svelte-direct
+npm install laravel-svelte-direct-mix
 ````
 
 ### Configure Laravel Mix
 webpack.mix.js
 ```javascript
 const mix = require('laravel-mix');
-require('laravel-svelte-direct')
+require('laravel-svelte-direct-mix')
 
 mix.svelteDirect('resources/js/Components', 'public/js');
 
