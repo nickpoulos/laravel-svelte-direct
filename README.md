@@ -16,7 +16,7 @@ Things that used to be very simple became increasingly complex overnight. With b
 
 There have been several awesome attempts to get the best of both worlds, especially within the Laravel community. Projects like Livewire and Alpine.js are amazing and really inspired the creation of this project.    
 
-Lately I have really taken a liking to Svelte, a different take on the typical React/Vue style application. It was refreshing to write less and do more with Javascript, but I still want my Blade templates and the old-school style of server side rendering.  
+Lately I have really taken a liking to Svelte, a different take on the typical React/Vue style application. It was refreshing to get declarative, reactive, single file components, without all the boilerplate. But coming from PHP & Laravel, I still want my Blade templates and server side rendering (ya know the old school way).
 
 Normally in this situation, Laravel is just there to serve the shell of the DOM, and then have Svelte/Vue/React take over your entire body tag, or very large chunks of your DOM.
 
