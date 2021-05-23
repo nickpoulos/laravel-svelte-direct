@@ -3,17 +3,20 @@
 namespace Nickpoulos\SvelteDirect\Tests;
 
 use Illuminate\Filesystem\Filesystem;
-use Nickpoulos\SvelteDirect\SvelteDirect;
+use Nickpoulos\SvelteDirect\SvelteDirectServiceProvider;
 
 class SvelteDirectTest extends TestCase
 {
-    public SvelteDirect $svelteDirect;
+    /**
+     * @var SvelteDirectServiceProvider
+     */
+    protected $svelteDirect;
 
     public function setUp() : void
     {
         parent::setUp();
 
-        $this->svelteDirect = new SvelteDirect();
+        $this->svelteDirect = new SvelteDirectServiceProvider($this->app);
     }
 
     public function testLoadManifestFile()
