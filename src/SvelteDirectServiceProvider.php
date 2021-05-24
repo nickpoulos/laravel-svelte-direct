@@ -9,8 +9,8 @@ use Illuminate\Support\ServiceProvider;
 
 class SvelteDirectServiceProvider extends ServiceProvider
 {
-    public ?array $manifest;
-    public array $tagsBeingUsed;
+    public ?array $manifest = [];
+    public array $tagsBeingUsed = [];
 
     public function boot(): void
     {
