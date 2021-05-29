@@ -2,8 +2,8 @@
 
 namespace Nickpoulos\SvelteDirect\Support;
 
-use PHPHtmlParser\Dom;
 use Illuminate\Filesystem\Filesystem;
+use PHPHtmlParser\Dom;
 
 class SvelteDirectManifestBuilder
 {
@@ -23,20 +23,21 @@ class SvelteDirectManifestBuilder
         );
 
         $tagNames = collect($svelteFiles)
-            ->keyBy(fn($file) => $file->getRealPath())
-            ->map(function(\SplFileInfo $file) use ($files) {
+            ->keyBy(fn ($file) => $file->getRealPath())
+            ->map(function (\SplFileInfo $file) use ($files) {
                 return $files->get($file->getRealPath());
             })
-            ->filter(function(string $code) {
+            ->filter(function (string $code) {
                 $pattern = '/<\s*svelte:options\s.+>/';
+
                 return preg_match($pattern, $code, $matches);
             })
-            ->map(function(string $code) use ($files) {
+            ->map(function (string $code) use ($files) {
                 $pattern = '/<\s*svelte:options\s.+>/';
                 preg_match_all($pattern, $code, $matches);
+
                 return (new Dom)->loadStr($matches[0][0])->find('svelte:options')[0]?->tag;
             })
             ->flip();
     }
-
 }
