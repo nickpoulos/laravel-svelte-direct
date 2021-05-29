@@ -30,7 +30,6 @@ This project consists of two pieces.
 - Laravel Mix plugin installed via NPM
   - Compiles Svelte components into bite-sized JS files
     
-
 - Blade Pre-Compiler/Directive installed via Composer
   - Scans Blade templates and loads the right bite sized component JS
 
@@ -71,7 +70,7 @@ composer require nickpoulos/laravel-svelte-direct
 
 ### Configure Blade Template
 
-In your applications's main Blade layout/component, add the `@sveltedirect` Blade directive in your `<head>` tag.  
+In your applications's main Blade layout/component, add the `@sveltedirect`above your ending `</body>` tag.  
 
 Feel free to add your Svelte component anywhere inside the Blade HTML. You will notice the tag we use in the HTML below matches the `<svelte:options>` tag attribute above.
 
@@ -80,20 +79,15 @@ example.blade.php
 <!doctype html>
 <html>
 <head>
-    <title>My Example App</title>
-    
-    @sveltedirect
-    
+    <title>My Example App</title>    
 </head>
 <body>
 <div class="container">
 
     <!-- example Svelte components here --> 
-    
     <app-header>
         <flash-message type="success" message="test" />
     </app-header>
-    
     <!-- end components -->
     
 </div>
@@ -101,6 +95,11 @@ example.blade.php
 <script type="text/javascript">
     // tie your components together using vanilla js or something ike alpine
 </script>
+
+<!-- START Svelte Direct Component JavaScript -->
+@sveltedirect
+<!-- END Svelte Direct Component JavaScript -->
+
 </body>
 </html>
 
