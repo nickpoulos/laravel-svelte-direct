@@ -16,7 +16,6 @@ class SvelteDirectServiceProvider extends ServiceProvider
     {
         $this->loadManifestFile();
         $this->loadBladePreCompiler();
-        $this->loadBladeDirective();
     }
 
     public function defaultManifestPath() : string
@@ -38,15 +37,6 @@ class SvelteDirectServiceProvider extends ServiceProvider
         }
 
         $this->app['blade.compiler']->precompiler([$this, 'findTagsInBladeTemplate']);
-    }
-
-    public function loadBladeDirective() : void
-    {
-        if (! $this->manifest) {
-            return;
-        }
-
-        Blade::directive('sveltedirect', [$this, 'generateDirectiveHtml']);
     }
 
     /** @internal */
