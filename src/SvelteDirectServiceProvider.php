@@ -10,7 +10,6 @@ use Illuminate\Support\ServiceProvider;
 class SvelteDirectServiceProvider extends ServiceProvider
 {
     public ?array $manifest = [];
-    public array $tagsBeingUsed = [];
 
     public function boot(): void
     {
@@ -45,16 +44,19 @@ class SvelteDirectServiceProvider extends ServiceProvider
         $tagPattern = implode('|', array_keys($this->manifest));
         $pattern = "/(?<=<)\s*{$tagPattern}/";
         preg_match_all($pattern, $view, $matches);
-        $this->tagsBeingUsed = array_merge(array_unique($matches[0]), $this->tagsBeingUsed);
 
-        return $view;
+        $identifiedTags = array_intersect(array_keys($this->manifest), array_unique($matches[0]));
+
+        $pushHtml = "@push('sveltedirect')" . PHP_EOL .
+            $this->generateHtml($identifiedTags)
+        . PHP_EOL . "@endpush";
+
+        return $view . $pushHtml;
     }
 
     /** @internal */
-    public function generateDirectiveHtml(string $expression) : string
+    public function generateHtml(array $tagsToLoad) : string
     {
-        $tagsToLoad = array_intersect(array_keys($this->manifest), $this->tagsBeingUsed);
-
         return array_reduce($tagsToLoad, function ($previous, $current) {
             return $previous . '<script src="{{ mix("' . $this->manifest[$current] . '") }}"></script>' . PHP_EOL;
         }, '');
