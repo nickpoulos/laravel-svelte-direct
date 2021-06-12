@@ -76,6 +76,7 @@ class SvelteDirectServiceProvider extends ServiceProvider
     public function precompiler(string $viewTemplateCode)
     {
         $tagsToLoad = $this->findSvelteComponentTagsInBlade($viewTemplateCode);
+
         return $viewTemplateCode . $this->appendPushDirective($tagsToLoad);
     }
 
@@ -93,6 +94,7 @@ class SvelteDirectServiceProvider extends ServiceProvider
         $tagPattern = implode('|', array_keys($this->manifest));
         $pattern = "/(?<=<)\s*(?:{$tagPattern})(?=\s|>|\/)+/";
         preg_match_all($pattern, $view, $matches);
+
         return array_intersect(array_keys($this->manifest), array_unique($matches[0]));
     }
 

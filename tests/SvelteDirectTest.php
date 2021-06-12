@@ -33,7 +33,7 @@ class SvelteDirectTest extends TestCase
      */
     protected array $testManifest = [
         'test-tag' => '/js/TestTag.js',
-        'nick-poulos' => '/js/NickPoulos.js'
+        'nick-poulos' => '/js/NickPoulos.js',
     ];
 
     /**
@@ -203,23 +203,23 @@ class SvelteDirectTest extends TestCase
         return [
             "Regular Style Tags" => [
                 $expectedResultWhenFound,
-                $regularStyleTags
+                $regularStyleTags,
             ],
             "Single Closing Style Tags" => [
                 $expectedResultWhenFound,
-                $singleClosingStyleTags
+                $singleClosingStyleTags,
             ],
             "Nested Regular Style Tags" => [
                 $expectedResultWhenFound,
-                $nestedRegularStyleTags
+                $nestedRegularStyleTags,
             ],
             "Nested Single Closing Style Tags" => [
                 $expectedResultWhenFound,
-                $nestedSingleClosingStyleTags
+                $nestedSingleClosingStyleTags,
             ],
             "Broken Tag That Is Close" => [
                 $expectedResultWhenNotFound,
-                $brokenTagsWithCloseName
+                $brokenTagsWithCloseName,
             ],
         ];
     }
@@ -232,7 +232,7 @@ class SvelteDirectTest extends TestCase
     {
         $result = "<?php return [" . PHP_EOL;
 
-        array_walk($testManifest, function(string $jsFile, string $tag) use(&$result) {
+        array_walk($testManifest, function (string $jsFile, string $tag) use (&$result) {
             $result .= "'" . $tag . "' => '" . $jsFile . "'," . PHP_EOL;
         });
 
