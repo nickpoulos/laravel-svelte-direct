@@ -25,24 +25,23 @@ But I like eating my cake too, and so this little project was born.
 
 ## How? 
 
-This project consists of two pieces.  
+This package has two main pieces.   
 
-- Laravel Mix plugin installed via NPM
-  - Compiles Svelte components into bite-sized JS files
-    
-- Blade Pre-Compiler/Directive installed via Composer
-  - Scans Blade templates and loads the right bite sized component JS
+- A Laravel Mix plugin that compiles each of your Svelte components into their own bite-sized JS files
+  
+- A Blade Pre-Compiler that scans Blade templates identifies your Svelte component tags, and loads the right component JS automatically
 
-### Install Laravel Svelte Direct JavaScript
+### Install Laravel Svelte Direct
+
 ```bash
-npm install laravel-svelte-direct-mix
-````
+composer require nickpoulos/laravel-svelte-direct
+```
 
 ### Configure Laravel Mix
 webpack.mix.js
 ```javascript
 const mix = require('laravel-mix');
-require('laravel-svelte-direct-mix')
+require('./vendor/nickpoulos/laravel-svelte-direct/js/mix');
 
 mix.svelteDirect('resources/js/Components', 'public/js');
 
@@ -60,17 +59,9 @@ The options tag tells Svelte (and Svelte Direct), what the component's HTML tag 
 The comment tag tells Svelte to ignore when we don't have `customElement` set to true. 
 
 
-### Install Laravel Svelte Direct PHP
-
-You can install the package via composer:
-
-```bash
-composer require nickpoulos/laravel-svelte-direct
-```
-
 ### Configure Blade Template
 
-In your applications's main Blade layout/component, add the `@sveltedirect`above your ending `</body>` tag.  
+In your applications's main Blade layout/component, add the `@stack('sveltedirect')'`above your ending `</body>` tag.  
 
 Feel free to add your Svelte component anywhere inside the Blade HTML. You will notice the tag we use in the HTML below matches the `<svelte:options>` tag attribute above.
 
@@ -97,7 +88,7 @@ example.blade.php
 </script>
 
 <!-- START Svelte Direct Component JavaScript -->
-@sveltedirect
+@stack('sveltedirect')
 <!-- END Svelte Direct Component JavaScript -->
 
 </body>
