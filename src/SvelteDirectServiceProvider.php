@@ -91,9 +91,8 @@ class SvelteDirectServiceProvider extends ServiceProvider
     public function findSvelteComponentTagsInBlade(string $view) : array
     {
         $tagPattern = implode('|', array_keys($this->manifest));
-        $pattern = "/(?<=<)\s*{$tagPattern}/";
+        $pattern = "/(?<=<)\s*(?:{$tagPattern})(?=\s|>|\/)+/";
         preg_match_all($pattern, $view, $matches);
-
         return array_intersect(array_keys($this->manifest), array_unique($matches[0]));
     }
 
