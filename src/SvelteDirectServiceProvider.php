@@ -9,9 +9,18 @@ use Illuminate\Support\ServiceProvider;
 class SvelteDirectServiceProvider extends ServiceProvider
 {
     /**
-     * @var array|null
+     * Our internal "tag-to-js file" mapping
+     *
+     * @var array
      */
-    public ?array $manifest = [];
+    public array $manifest = [];
+
+    /**
+     * Keep track of already loaded tags to prevent duplicate imports
+     *
+     * @var array
+     */
+    public array $loadedTags = [];
 
     /**
      * Main class entrypoint
@@ -47,7 +56,7 @@ class SvelteDirectServiceProvider extends ServiceProvider
     {
         $files = new Filesystem();
         $manifestPath = $manifestFilePath ?? $this->defaultManifestPath();
-        $this->manifest = file_exists($manifestPath) ? $files->getRequire($manifestPath):null;
+        $this->manifest = file_exists($manifestPath) ? $files->getRequire($manifestPath):[];
     }
 
     /**
@@ -75,7 +84,12 @@ class SvelteDirectServiceProvider extends ServiceProvider
      */
     public function precompiler(string $viewTemplateCode)
     {
-        $tagsToLoad = $this->findSvelteComponentTagsInBlade($viewTemplateCode);
+        $tagsToLoad = array_diff(
+            $this->findSvelteComponentTagsInBlade($viewTemplateCode),
+            $this->loadedTags,
+        );
+
+        $this->loadedTags = array_merge($this->loadedTags, $tagsToLoad);
 
         return $viewTemplateCode . $this->appendPushDirective($tagsToLoad);
     }
