@@ -3,15 +3,25 @@
 namespace Nickpoulos\SvelteDirect;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
 class SvelteDirectServiceProvider extends ServiceProvider
 {
     /**
-     * @var array|null
+     * Our internal "tag-to-js file" mapping
+     *
+     * @var array
      */
-    public ?array $manifest = [];
+    public array $manifest = [];
+
+    /**
+     * Keep track of already loaded tags to prevent duplicate imports
+     *
+     * @var array
+     */
+    public array $loadedTags = [];
 
     /**
      * Main class entrypoint
@@ -19,7 +29,7 @@ class SvelteDirectServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadManifestFile();
-        $this->loadBladePreCompiler();
+        $this->app['blade.compiler']->precompiler([$this, 'precompiler']);
     }
 
     /**
@@ -47,23 +57,8 @@ class SvelteDirectServiceProvider extends ServiceProvider
     {
         $files = new Filesystem();
         $manifestPath = $manifestFilePath ?? $this->defaultManifestPath();
-        $this->manifest = file_exists($manifestPath) ? $files->getRequire($manifestPath):null;
+        $this->manifest = file_exists($manifestPath) ? $files->getRequire($manifestPath):[];
     }
-
-    /**
-     * Register our precompiler function within the Blade compiler engine
-     *
-     * @internal
-     */
-    public function loadBladePreCompiler() : void
-    {
-        if (! $this->manifest) {
-            return;
-        }
-
-        $this->app['blade.compiler']->precompiler([$this, 'precompiler']);
-    }
-
 
     /**
      * Our precompiler function that finds any Svelte component tags
@@ -73,29 +68,37 @@ class SvelteDirectServiceProvider extends ServiceProvider
      * @param string $viewTemplateCode
      * @return string
      */
-    public function precompiler(string $viewTemplateCode)
+    public function precompiler(string $viewTemplateCode) : string
     {
-        $tagsToLoad = $this->findSvelteComponentTagsInBlade($viewTemplateCode);
+        collect($this->manifest)->each(function (string $jsFile, string $tag) use (&$viewTemplateCode) {
+            $check = $this->findPositionOfSvelteTagInBlade($viewTemplateCode, $tag);
+            if (! $check || in_array($tag, $this->loadedTags, true)) {
+                return; // skip
+            }
+            $pushDirective = $this->generatePushDirective([$tag]);
+            $viewTemplateCode = substr_replace($viewTemplateCode, $pushDirective, $check - 1, 0);
+            $this->loadedTags = array_merge($this->loadedTags, [$tag]);
+        });
 
-        return $viewTemplateCode . $this->appendPushDirective($tagsToLoad);
+        return $viewTemplateCode;
     }
 
 
     /**
-     * Given Blade template code, find any of our Svelte component tags
-     * that were used within the template
+     * Given some Blade template code, and one of our Svelte component tags
+     * Check if the tag exists in the code, if so, return the position of the first occurrence
      *
+     * @param string $viewTemplateCode
+     * @param string $tag
+     * @return Collection
      * @internal
-     * @param string $view
-     * @return array
      */
-    public function findSvelteComponentTagsInBlade(string $view) : array
+    public function findPositionOfSvelteTagInBlade(string $viewTemplateCode, string $tag) : ?int
     {
-        $tagPattern = implode('|', array_keys($this->manifest));
-        $pattern = "/(?<=<)\s*(?:{$tagPattern})(?=\s|>|\/)+/";
-        preg_match_all($pattern, $view, $matches);
+        $pattern = "/(?<=<)\s*(?:{$tag})(?=\s|>|\/)+/";
+        preg_match_all($pattern, $viewTemplateCode, $matches, PREG_OFFSET_CAPTURE);
 
-        return array_intersect(array_keys($this->manifest), array_unique($matches[0]));
+        return collect($matches[0])->pluck(1)->first();
     }
 
     /**
@@ -105,7 +108,7 @@ class SvelteDirectServiceProvider extends ServiceProvider
      * @param array $tagsToLoad
      * @return string
      */
-    public function appendPushDirective(array $tagsToLoad) : string
+    public function generatePushDirective(array $tagsToLoad) : string
     {
         return "@push('sveltedirect')" . PHP_EOL .
             $this->generateScriptHtml($tagsToLoad)

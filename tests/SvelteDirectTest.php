@@ -105,16 +105,48 @@ class SvelteDirectTest extends TestCase
     }
 
     /**
+     * @dataProvider precompilerDataProvider
+     */
+    public function testPrecompiler()
+    {
+        $tagsToLoad = array_keys($this->testManifest);
+
+        $expected = array_reduce($tagsToLoad, function ($previous, $current) {
+            return $previous . '<script src="{{ mix("' . $this->testManifest[$current] . '") }}"></script>' . PHP_EOL;
+        }, '');
+
+        $this->svelteDirect->loadManifestFile(self::TEST_MANIFEST_FILE_PATH);
+
+        $actual = $this->svelteDirect->generateScriptHtml($tagsToLoad);
+
+        self::assertEquals($expected, $actual);
+    }
+
+    /**
+     * Data Provider function for testPrecompiler()
+     *
+     * @return array[]
+     */
+    public function precompilerDataProvider() : array
+    {
+        return [
+            'single' =>
+        ];
+    }
+
+    /**
      * @dataProvider bladeTemplateCodeDataProvider
      */
     public function testFindSvelteComponentTagsInBlade(array $expectedResult, string $testBladeTemplateCode)
     {
         $this->svelteDirect->loadManifestFile(self::TEST_MANIFEST_FILE_PATH);
-        $actual = $this->svelteDirect->findSvelteComponentTagsInBlade($testBladeTemplateCode);
+        $actual = $this->svelteDirect->findPositionOfSvelteTagInBlade($testBladeTemplateCode);
         self::assertEquals($expectedResult, $actual);
     }
 
     /**
+     * Data provider function for testFindSvelteComponentTagsInBlade
+     *
      * @return array[]
      */
     public function bladeTemplateCodeDataProvider() : array
