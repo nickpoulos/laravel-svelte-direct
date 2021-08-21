@@ -2,8 +2,8 @@
 
 namespace Nickpoulos\SvelteDirect;
 
-use Illuminate\Support\Collection;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
@@ -70,9 +70,9 @@ class SvelteDirectServiceProvider extends ServiceProvider
      */
     public function precompiler(string $viewTemplateCode) : string
     {
-        collect($this->manifest)->each(function(string $jsFile, string $tag) use (&$viewTemplateCode) {
+        collect($this->manifest)->each(function (string $jsFile, string $tag) use (&$viewTemplateCode) {
             $check = $this->findPositionOfSvelteTagInBlade($viewTemplateCode, $tag);
-            if (!$check || in_array($tag, $this->loadedTags, true)) {
+            if (! $check || in_array($tag, $this->loadedTags, true)) {
                 return; // skip
             }
             $pushDirective = $this->generatePushDirective([$tag]);
@@ -97,6 +97,7 @@ class SvelteDirectServiceProvider extends ServiceProvider
     {
         $pattern = "/(?<=<)\s*(?:{$tag})(?=\s|>|\/)+/";
         preg_match_all($pattern, $viewTemplateCode, $matches, PREG_OFFSET_CAPTURE);
+
         return collect($matches[0])->pluck(1)->first();
     }
 
